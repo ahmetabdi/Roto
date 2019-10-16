@@ -10,10 +10,6 @@ is_retina = False
 if platform.system() == "Darwin":
     is_retina = subprocess.call("system_profiler SPDisplaysDataType | grep 'retina'", shell=True)
 
-def pixel_grabber(image, x, y):
-    image = cv2.imread(image, 0)
-    image[x, y]
-
 '''
 grabs a region (topx, topy, bottomx, bottomy)
 to the tuple (topx, topy, width, height)
