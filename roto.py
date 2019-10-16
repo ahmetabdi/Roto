@@ -1,5 +1,8 @@
-from imagesearch import *
-from helper import targets, abilities
+import time
+import pyautogui
+
+from lib.imagesearch import region_grabber, imagesearcharea
+from lib.data import targets, abilities
 
 while True:
     # Fetch top-left bar
