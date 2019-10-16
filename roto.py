@@ -1,43 +1,25 @@
-import time
-import json
-
-from ahk import AHK
-from colorama import init, Fore, Back, Style, ansi
-
-init()
-
-ahk = AHK(executable_path='C:\\Program Files\\AutoHotkey\\AutoHotkey.exe')
-
-# ahk.mouse_move(x=100, y=100, blocking=True)  # Blocks until mouse finishes moving (the default)
-# ahk.mouse_move(x=150, y=150, speed=10, blocking=True) # Moves the mouse to x, y taking 'speed' seconds to move
-# print(ahk.mouse_position)  #  (150, 150)
-
-def rgbToHex(r, g, b):
-    print(r, g, b)
-    '%02x%02x%02x' % (int(r*255), int(g*255), int(b*255))
-    # '#%02x%02x%02x' % (r, g, b)
-
-with open('healing.json') as healing_file:
-    data = json.load(healing_file)
-    for value in data.values():
-        # print(value['colour'][0])
-        print(rgbToHex(value['colour'][0], value['colour'][1], value['colour'][2]))
-
-# with open('keys.json') as data_file:    
-#     data = json.load(data_file)
-#     for value in data.values():
-#         print(value['key'], value['image'])
+from imagesearch import *
+from helper import targets, abilities
 
 while True:
-    ansi.clear_screen()
-    time.sleep(0.3)
+    # Fetch top-left bar
+    im = region_grabber((0, 0, 400, 11))
 
-    shadowguard = ahk.image_search('C:\\Users\\Green\\Desktop\\Roto\\shadowguard.png', upper_bound=(0, 0), lower_bound=(440, 10))
+    found_match = 0
 
-    healing_engine_pixel = ahk.pixel_get_color(442, 0)
+    for ability in abilities:
+        match_position = imagesearcharea(ability['image'], 0, 0, 400, 11, 0.8, im)
+        # Found ability
+        if match_position[0] != -1:
+            found_match = 1
+            print("Found match: ", ability['image'])
+            # Cast the ability
+            # pyautogui.hotkey(*ability['hotkey'])
 
-    print(healing_engine_pixel)
+    # if we don't find a match log the icon
+    if found_match == 0:
+        print('Log missing icon')
+        im = region_grabber((19, 0, 37, 11))
+        im.save('icon.png')
 
-    if (shadowguard != None): 
-        print(Back.GREEN + 'Found shadowguard')
-        ahk.send('+e', raw=False)
+    time.sleep(0.1)
